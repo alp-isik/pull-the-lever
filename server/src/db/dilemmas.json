@@ -1,0 +1,102 @@
+[
+  {
+    "text": "A trolley is heading toward five people. Pull the lever and it hits one person instead.",
+    "options": ["Pull the lever", "Do nothing"]
+  },
+  {
+    "text": "A trolley is heading toward your phone. Pull the lever and it hits your laptop instead.",
+    "options": ["Pull the lever", "Do nothing"]
+  },
+  {
+    "text": "Pull the lever to turn every meeting into an email. The trolley then hits the office coffee machine.",
+    "options": ["Pull the lever", "Do nothing"]
+  },
+  {
+    "text": "Pull the lever to remove every mosquito from Earth. Scientists are not sure what happens next.",
+    "options": ["Pull the lever", "Do nothing"]
+  },
+  {
+    "text": "Pull the lever to make everyone 10% happier. The sky turns green forever.",
+    "options": ["Pull the lever", "Do nothing"]
+  },
+  {
+    "text": "A trolley is heading toward the last copy of every printed book. Pull the lever and it hits the internet's data centers instead.",
+    "options": ["Save the books", "Save the internet"]
+  },
+  {
+    "text": "Would you rather fight one horse-sized duck or a hundred duck-sized horses?",
+    "options": ["One horse-sized duck", "100 duck-sized horses"]
+  },
+  {
+    "text": "Would you rather always be 10 minutes late or always be 20 minutes early?",
+    "options": ["10 minutes late", "20 minutes early"]
+  },
+  {
+    "text": "Does pineapple belong on pizza?",
+    "options": ["Yes, obviously", "Absolutely not"]
+  },
+  {
+    "text": "Is a hot dog a sandwich?",
+    "options": ["It's a sandwich", "It's not a sandwich"]
+  },
+  {
+    "text": "Toilet paper: over or under?",
+    "options": ["Over", "Under"]
+  },
+  {
+    "text": "Would you rather know the date of your death or the cause of it?",
+    "options": ["The date", "The cause"]
+  },
+  {
+    "text": "Would you rather be able to read minds or be invisible?",
+    "options": ["Read minds", "Be invisible"]
+  },
+  {
+    "text": "Would you rather talk to animals or speak every human language?",
+    "options": ["Talk to animals", "Speak every language"]
+  },
+  {
+    "text": "Would you rather have a rewind button or a pause button for your life?",
+    "options": ["Rewind", "Pause"]
+  },
+  {
+    "text": "You find a wallet with 5,000 kr in it and no ID card.",
+    "options": ["Hand it in", "Keep it"]
+  },
+  {
+    "text": "Would you rather never sit in traffic again or never catch a cold again?",
+    "options": ["No more traffic", "No more colds"]
+  },
+  {
+    "text": "Would you rather live without music or without movies?",
+    "options": ["No music", "No movies"]
+  },
+  {
+    "text": "Would you rather have a personal chef or a personal driver?",
+    "options": ["Personal chef", "Personal driver"]
+  },
+  {
+    "text": "Would you rather work four days a week for 80% pay or five days for full pay?",
+    "options": ["Four days, 80% pay", "Five days, full pay"]
+  },
+  {
+    "text": "Would you rather have your dream job with a terrible boss or a boring job with a great boss?",
+    "options": ["Dream job, bad boss", "Boring job, great boss"]
+  },
+  {
+    "text": "Would you rather work from home forever or from the office forever?",
+    "options": ["Home forever", "Office forever"]
+  },
+  {
+    "text": "A coworker takes credit for your work in a meeting.",
+    "options": ["Call it out right away", "Talk to them after"]
+  },
+  {
+    "text": "Would you rather be the best-paid person on a team you hate or the lowest-paid on a team you love?",
+    "options": ["Best paid, bad team", "Lowest paid, great team"]
+  },
+  {
+    "text": "Would you rather give one talk to 500 strangers or ten talks to 5 coworkers?",
+    "options": ["500 strangers", "5 coworkers, ten times"]
+  }
+]

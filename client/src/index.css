@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+/* Colors and font for the whole app. Tailwind makes classes from these, for example bg-paper and text-ink. */
+@theme {
+  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --color-paper: #f7f4ee;
+  --color-card: #fffdf9;
+  --color-ink: #1c1a17;
+  --color-muted: #6b665e;
+  --color-line: #d9d3c7;
+  --color-accent: #e4572e;
+  --color-accent-soft: #fbe3da;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* The waiting trolley in TrackFork.jsx rocks a little forward and back.
+   Its drive along the track is an SVG <animateMotion>, not CSS. */
+.trolley-wait {
+  animation: trolley-wait 1.6s ease-in-out infinite;
+}
+
+@keyframes trolley-wait {
+  50% {
+    transform: translateX(6px);
+  }
+}
+
+/* Result bars grow from 0 to the width set in their style attribute.
+   They wait 0.6s, so the trolley reaches its branch first. */
+.bar-grow {
+  animation: bar-grow 0.7s ease-out 0.6s backwards;
+}
+
+@keyframes bar-grow {
+  from {
+    width: 0;
+  }
+}
+
+/* Short fade-in for things that appear after a vote. */
+.fade-up {
+  animation: fade-up 0.4s ease-out 0.6s backwards;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trolley-wait {
+    animation: none;
+  }
+
+  .bar-grow,
+  .fade-up {
+    animation-duration: 1ms;
+    animation-delay: 0s;
+  }
+}
