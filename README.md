@@ -109,4 +109,5 @@ A pick counts once its dilemma has at least 5 votes:
   - Admin login: 5 failed attempts per 15 minutes.
   - Submissions: 10 per hour.
 - The limits are kept in memory, so they reset when the server restarts.
-- Behind a hosting proxy, every request seems to come from the proxy's IP address. Add `app.set("trust proxy", 1)` in `server/src/app.js` when you deploy, so the limits see each player's real IP address.
+- Behind a hosting proxy, every request seems to come from the proxy's IP address. Then one person can use up a limit for everyone. Set `TRUST_PROXY=1` in `.env` when you deploy, so the limits see each player's real IP address.
+- The server sends security headers with [helmet](https://helmetjs.github.io/), for example a Content Security Policy.

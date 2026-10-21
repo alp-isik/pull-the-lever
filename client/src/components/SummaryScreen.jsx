@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { getPlayerSummary } from "../api.js";
 import Notice from "./Notice.jsx";
-import { card, primaryButton, secondaryButton } from "./styles.js";
+import { card, largePrimaryButton, largeSecondaryButton } from "./styles.js";
 
 const HOT_TAKES_TO_SHOW = 3;
 
@@ -66,13 +66,13 @@ export default function SummaryScreen() {
         <StatTile
           value={summary.counts.mainstream}
           label="Mainstream"
-          hint="60% or more agreed with you"
+          hint={`${summary.mainstreamPercent}% or more agreed with you`}
         />
         <StatTile value={summary.counts.closeCall} label="Close calls" hint="Players were split" />
         <StatTile
           value={summary.counts.hotTake}
           label="Hot takes"
-          hint="40% or fewer agreed with you"
+          hint={`${summary.hotTakePercent}% or fewer agreed with you`}
         />
       </div>
 
@@ -87,7 +87,7 @@ export default function SummaryScreen() {
         <div className="flex flex-col gap-4">
           <h2 className="text-2xl font-bold">Your hottest takes</h2>
           {hottestTakes.map((pick) => (
-            <div key={pick.dilemmaText} className={card}>
+            <div key={pick.dilemmaId} className={card}>
               <p className="text-muted">{pick.dilemmaText}</p>
               <p className="mt-2 font-semibold">
                 You picked "{pick.pickedText}". Only {pick.agreePercent}% agreed.
@@ -102,7 +102,7 @@ export default function SummaryScreen() {
         <ul className="mt-4 divide-y-2 divide-line">
           {summary.picks.map((pick) => (
             <li
-              key={pick.dilemmaText}
+              key={pick.dilemmaId}
               className="flex flex-col gap-1 py-3 sm:flex-row sm:justify-between sm:gap-6"
             >
               <span className="text-muted">{pick.dilemmaText}</span>
@@ -114,12 +114,13 @@ export default function SummaryScreen() {
         </ul>
       </details>
 
-      <div className="flex flex-wrap gap-3">
-        <Link to="/submit" className={primaryButton}>
-          Submit your own dilemma
-        </Link>
-        <Link to="/" className={secondaryButton}>
+      {/* Same buttons as on the front page: the main action on the left, Submit on the right. */}
+      <div className="flex flex-wrap justify-center gap-3">
+        <Link to="/" className={largePrimaryButton}>
           Back to the start
+        </Link>
+        <Link to="/submit" className={largeSecondaryButton}>
+          Submit a dilemma
         </Link>
       </div>
     </section>

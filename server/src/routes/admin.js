@@ -1,8 +1,7 @@
 import { Router } from "express";
-import { Dilemma } from "../models/index.js";
 import { httpError } from "../errors.js";
 import { parseId } from "../validation.js";
-import { findDilemmasByStatus, toDilemmaJson } from "../services/dilemmas.js";
+import { findDilemmasByStatus, reviewDilemma, toDilemmaJson } from "../services/dilemmas.js";
 import {
   endAdminSession,
   isAdminRequest,
@@ -53,13 +52,11 @@ router.patch("/submissions/:id", requireAdmin, async (req, res) => {
     throw httpError(400, 'Send a valid ID and a status of "approved" or "rejected".');
   }
 
-  const dilemma = await Dilemma.findByPk(dilemmaId);
+  const dilemma = await reviewDilemma(dilemmaId, status);
   if (!dilemma) {
     throw httpError(404, "This dilemma does not exist.");
   }
 
-  dilemma.status = status;
-  await dilemma.save();
   res.json({ id: dilemma.id, status: dilemma.status });
 });
 

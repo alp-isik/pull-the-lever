@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import TrackFork from "../components/TrackFork.jsx";
-import { primaryButton } from "../components/styles.js";
+import { largePrimaryButton, largeSecondaryButton } from "../components/styles.js";
 
 const steps = [
   { title: "Pick a track", text: "Every dilemma has two options. No right answers." },
@@ -19,11 +19,8 @@ export default function HomePage() {
           A game of small and silly dilemmas
         </p>
         <h1 className="max-w-2xl text-4xl font-extrabold tracking-tight text-balance sm:text-6xl">
-          The trolley is coming. Which way?
+          Would you pull the lever?
         </h1>
-        <p className="max-w-lg text-lg text-muted">
-          Make a run of quick decisions, then see how your choices compare with everyone else's.
-        </p>
       </div>
 
       {/* Same as on the Play page: the track takes the height that is left over. */}
@@ -33,9 +30,14 @@ export default function HomePage() {
         </div>
       </div>
 
-      <Link to="/play" className={`${primaryButton} px-10 text-lg`}>
-        Play
-      </Link>
+      <div className="flex flex-wrap justify-center gap-3">
+        <Link to="/play" className={largePrimaryButton}>
+          Play
+        </Link>
+        <Link to="/submit" className={largeSecondaryButton}>
+          Submit a dilemma
+        </Link>
+      </div>
 
       <ol className="grid w-full gap-4 pt-6 text-left sm:grid-cols-3">
         {steps.map((step, index) => (

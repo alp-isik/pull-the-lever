@@ -44,7 +44,8 @@ export function isAdminRequest(req) {
   }
 
   try {
-    const payload = jwt.verify(token, config.jwtSecret);
+    // Accept only the algorithm that jwt.sign uses, so a token cannot pick a weaker one.
+    const payload = jwt.verify(token, config.jwtSecret, { algorithms: ["HS256"] });
     if (payload.role === "admin") {
       return true;
     }

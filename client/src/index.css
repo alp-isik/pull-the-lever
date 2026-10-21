@@ -8,8 +8,34 @@
   --color-ink: #1c1a17;
   --color-muted: #6b665e;
   --color-line: #d9d3c7;
-  --color-accent: #e4572e;
-  --color-accent-soft: #fbe3da;
+  --color-accent: #d7263d;
+  --color-accent-soft: #fbdde1;
+  /* Text on the accent color. White stays readable on the red in both modes. */
+  --color-on-accent: #ffffff;
+}
+
+/* public/theme.js sets <html data-theme="light"> or "dark" before the page draws.
+   Dark mode changes only the color values, so every class still works.
+   color-scheme makes native parts, such as scroll bars and form fields, follow the same mode. */
+:root {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-paper: #1a1815;
+  --color-card: #24211d;
+  --color-ink: #f2ede4;
+  --color-muted: #a39d92;
+  --color-line: #3d3832;
+  --color-accent: #d7263d;
+  --color-accent-soft: #3d1a1f;
+}
+
+/* The logo tile in favicon.svg is near-black. In dark mode a light ring keeps its edge visible. */
+:root[data-theme="dark"] .logo-tile {
+  border-radius: 8px;
+  box-shadow: 0 0 0 1.5px var(--color-muted);
 }
 
 body {

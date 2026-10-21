@@ -1,7 +1,7 @@
 import { rateLimit } from "express-rate-limit";
+import { ONE_HOUR } from "../cookies.js";
 
-const FIFTEEN_MINUTES = 15 * 60 * 1000;
-const ONE_HOUR = 60 * 60 * 1000;
+const FIFTEEN_MINUTES = ONE_HOUR / 4;
 
 // Limits count requests per IP address. Over the limit, the client gets status 429.
 

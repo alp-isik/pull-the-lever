@@ -24,7 +24,7 @@ export default function OptionCard({ label, option, isPicked, isLocked, result, 
       <span className="flex flex-wrap items-center justify-between gap-1 text-xs font-bold tracking-widest text-muted uppercase">
         {label}
         {isPicked && (
-          <span className="rounded-full bg-accent px-2 py-0.5 whitespace-nowrap text-paper">
+          <span className="rounded-full bg-accent px-2 py-0.5 whitespace-nowrap text-on-accent">
             Your pick
           </span>
         )}

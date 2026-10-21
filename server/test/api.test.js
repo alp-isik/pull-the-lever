@@ -48,6 +48,16 @@ describe("POST /api/dilemmas/:id/votes", () => {
     expect(response.body.pickedOptionId).toBe(tea.id);
     expect(response.body.totalVotes).toBe(1);
     expect(response.body.options[0]).toEqual({ id: tea.id, votes: 1, percent: 100 });
+    // One vote is not enough to sort the pick.
+    expect(response.body.category).toBe("notEnoughData");
+  });
+
+  test("rejects a vote on a dilemma that is not approved", async () => {
+    const [cats] = pendingDilemma.Options;
+    await newPlayer()
+      .post(`/api/dilemmas/${pendingDilemma.id}/votes`)
+      .send({ optionId: cats.id })
+      .expect(404);
   });
 
   test("keeps the first vote when the player votes again", async () => {
@@ -150,6 +160,29 @@ describe("admin", () => {
       .patch(`/api/admin/submissions/${pendingDilemma.id}`)
       .send({ status: "deleted" })
       .expect(400);
+  });
+
+  test("returns 404 for a dilemma that does not exist", async () => {
+    const admin = await loginAsAdmin();
+    await admin.patch("/api/admin/submissions/9999").send({ status: "approved" }).expect(404);
+  });
+
+  test("the session shows if the browser is logged in as admin", async () => {
+    const guest = await request(app).get("/api/admin/session").expect(200);
+    expect(guest.body).toEqual({ isAdmin: false });
+
+    const admin = await loginAsAdmin();
+    const session = await admin.get("/api/admin/session").expect(200);
+    expect(session.body).toEqual({ isAdmin: true });
+  });
+
+  test("logout ends the admin session", async () => {
+    const admin = await loginAsAdmin();
+    await admin.post("/api/admin/logout").expect(200);
+
+    const session = await admin.get("/api/admin/session");
+    expect(session.body).toEqual({ isAdmin: false });
+    await admin.get("/api/admin/submissions").expect(401);
   });
 });
 

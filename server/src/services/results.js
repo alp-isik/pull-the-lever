@@ -2,8 +2,12 @@ import { Dilemma, Option, Vote, sequelize } from "../models/index.js";
 
 // Below this many votes, the percentages say too little about other players.
 export const MIN_VOTES_FOR_RESULT = 5;
+// At or above this share of agreement, a pick is mainstream.
+const MAINSTREAM_PERCENT = 60;
+// At or below this share of agreement, a pick is a hot take.
+const HOT_TAKE_PERCENT = 40;
 
-export function toPercent(part, total) {
+function toPercent(part, total) {
   if (total === 0) {
     return 0;
   }
@@ -15,10 +19,10 @@ export function classifyPick(agreePercent, totalVotes) {
   if (totalVotes < MIN_VOTES_FOR_RESULT) {
     return "notEnoughData";
   }
-  if (agreePercent >= 60) {
+  if (agreePercent >= MAINSTREAM_PERCENT) {
     return "mainstream";
   }
-  if (agreePercent <= 40) {
+  if (agreePercent <= HOT_TAKE_PERCENT) {
     return "hotTake";
   }
   return "closeCall";
@@ -35,7 +39,7 @@ async function countVotesByOption(dilemmaIds) {
   return new Map(rows.map((row) => [row.optionId, Number(row.votes)]));
 }
 
-export async function getDilemmaResults(dilemmaId) {
+async function getDilemmaResults(dilemmaId) {
   const options = await Option.findAll({
     where: { dilemmaId },
     order: [["position", "ASC"]],
@@ -53,6 +57,32 @@ export async function getDilemmaResults(dilemmaId) {
       const votes = votesByOption.get(option.id) || 0;
       return { id: option.id, votes, percent: toPercent(votes, totalVotes) };
     }),
+  };
+}
+
+// Save the player's vote and return how everyone voted on this dilemma.
+// Return null if the option does not belong to this dilemma, or the dilemma is not approved.
+export async function castVote(playerId, dilemmaId, optionId) {
+  const option = await Option.findOne({
+    where: { id: optionId, dilemmaId },
+    include: { model: Dilemma, where: { status: "approved" } },
+  });
+  if (!option) {
+    return null;
+  }
+
+  // Keep the first vote. A player cannot change an answer.
+  const [vote] = await Vote.findOrCreate({
+    where: { playerId, dilemmaId },
+    defaults: { optionId },
+  });
+  const results = await getDilemmaResults(dilemmaId);
+  const pickedResult = results.options.find((result) => result.id === vote.optionId);
+
+  return {
+    pickedOptionId: vote.optionId,
+    category: classifyPick(pickedResult.percent, results.totalVotes),
+    ...results,
   };
 }
 
@@ -74,6 +104,8 @@ export async function getPlayerSummary(playerId) {
     answered: playerVotes.length,
     totalDilemmas,
     minVotesForResult: MIN_VOTES_FOR_RESULT,
+    mainstreamPercent: MAINSTREAM_PERCENT,
+    hotTakePercent: HOT_TAKE_PERCENT,
     counts: { mainstream: 0, closeCall: 0, hotTake: 0, notEnoughData: 0 },
     picks: [],
   };
@@ -88,6 +120,7 @@ export async function getPlayerSummary(playerId) {
 
     summary.counts[category] += 1;
     summary.picks.push({
+      dilemmaId: vote.dilemmaId,
       dilemmaText: vote.Dilemma.text,
       pickedText: vote.Option.text,
       agreePercent,

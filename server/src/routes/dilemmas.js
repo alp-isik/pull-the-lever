@@ -1,9 +1,8 @@
 import { Router } from "express";
-import { Dilemma, Option, Vote } from "../models/index.js";
 import { httpError } from "../errors.js";
 import { parseId } from "../validation.js";
 import { findDilemmasByStatus, findPicksByPlayer, toDilemmaJson } from "../services/dilemmas.js";
-import { getDilemmaResults } from "../services/results.js";
+import { castVote } from "../services/results.js";
 
 const router = Router();
 
@@ -30,22 +29,12 @@ router.post("/:id/votes", async (req, res) => {
     throw httpError(400, "Send a valid dilemma ID and option ID.");
   }
 
-  const option = await Option.findOne({
-    where: { id: optionId, dilemmaId },
-    include: { model: Dilemma, where: { status: "approved" } },
-  });
-  if (!option) {
+  const results = await castVote(req.playerId, dilemmaId, optionId);
+  if (!results) {
     throw httpError(404, "This option does not exist.");
   }
 
-  // Keep the first vote. A player cannot change an answer.
-  const [vote] = await Vote.findOrCreate({
-    where: { playerId: req.playerId, dilemmaId },
-    defaults: { optionId },
-  });
-  const results = await getDilemmaResults(dilemmaId);
-
-  res.json({ pickedOptionId: vote.optionId, ...results });
+  res.json(results);
 });
 
 export default router;

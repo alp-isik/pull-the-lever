@@ -103,16 +103,25 @@ export default function AdminPage() {
   }
 
   async function handleLogout() {
-    await logoutAdmin();
-    setIsAdmin(false);
-    setSubmissions([]);
+    setErrorMessage(null);
+    try {
+      await logoutAdmin();
+      setIsAdmin(false);
+      setSubmissions([]);
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
   }
 
   async function handleReview(dilemmaId, status) {
     setErrorMessage(null);
     try {
       await reviewSubmission(dilemmaId, status);
-      setSubmissions(submissions.filter((submission) => submission.id !== dilemmaId));
+      // Filter the newest list, not the list from the time of the click.
+      // Then two quick reviews do not bring a removed card back.
+      setSubmissions((currentSubmissions) =>
+        currentSubmissions.filter((submission) => submission.id !== dilemmaId),
+      );
     } catch (error) {
       setErrorMessage(error.message);
     }

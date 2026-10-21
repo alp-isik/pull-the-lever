@@ -34,6 +34,18 @@ export async function findDilemmasByStatus(status) {
   });
 }
 
+// Set the review status of a dilemma. Return null if the dilemma does not exist.
+export async function reviewDilemma(dilemmaId, status) {
+  const dilemma = await Dilemma.findByPk(dilemmaId);
+  if (!dilemma) {
+    return null;
+  }
+
+  dilemma.status = status;
+  await dilemma.save();
+  return dilemma;
+}
+
 // Return a Map of dilemma ID -> the option ID this player picked.
 export async function findPicksByPlayer(playerId) {
   const votes = await Vote.findAll({ where: { playerId }, raw: true });

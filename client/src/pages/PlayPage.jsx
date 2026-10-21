@@ -26,14 +26,18 @@ function getPickedSide(options, pickedOptionId) {
   return SIDES[index];
 }
 
-function describeAgreement(agreePercent, totalVotes) {
+// The server sorts the pick into a category, so this page and the end screen always agree.
+function describeAgreement(category, agreePercent, totalVotes) {
   if (totalVotes <= 1) {
     return "You are the first to answer this one.";
   }
-  if (agreePercent >= 60) {
+  if (category === "notEnoughData") {
+    return `${agreePercent}% agree with you so far. Too few votes to call it yet.`;
+  }
+  if (category === "mainstream") {
     return `${agreePercent}% of people agree with you.`;
   }
-  if (agreePercent <= 40) {
+  if (category === "hotTake") {
     return `Only ${agreePercent}% of people agree with you. Hot take.`;
   }
   return `${agreePercent}% agree with you. People are split on this one.`;
@@ -63,11 +67,7 @@ export default function PlayPage() {
     return <p className="text-muted">Loading the tracks…</p>;
   }
   if (dilemmas.length === 0) {
-    return (
-      <Notice>
-        There are no dilemmas yet. Run <code>npm run seed</code> to add the starter set.
-      </Notice>
-    );
+    return <Notice>There are no dilemmas yet. Come back soon.</Notice>;
   }
   if (currentIndex >= dilemmas.length) {
     return <SummaryScreen />;
@@ -112,10 +112,6 @@ export default function PlayPage() {
         Dilemma {currentIndex + 1} of {dilemmas.length}
       </p>
 
-      <h1 className="min-h-[2lh] text-center text-xl leading-tight font-extrabold tracking-tight text-balance sm:text-3xl lg:text-4xl">
-        {dilemma.text}
-      </h1>
-
       {/* "absolute" takes the drawing out of the layout. The box then gets its height from the
           free space only, and the drawing shrinks to fit inside it. */}
       <div className="relative min-h-28 flex-1">
@@ -124,6 +120,11 @@ export default function PlayPage() {
           <TrackFork key={dilemma.id} pickedSide={getPickedSide(dilemma.options, pickedOptionId)} />
         </div>
       </div>
+
+      {/* The question sits right above the answers, so the player reads it next to the two options. */}
+      <h1 className="min-h-[2lh] text-center text-xl leading-tight font-extrabold tracking-tight text-balance sm:text-3xl lg:text-4xl">
+        {dilemma.text}
+      </h1>
 
       <div className="grid grid-cols-2 gap-3 sm:gap-6">
         {dilemma.options.map((option, index) => (
@@ -148,7 +149,7 @@ export default function PlayPage() {
         {results && (
           <div className="fade-up flex flex-col items-center gap-2">
             <p className="text-lg font-bold text-balance sm:text-2xl">
-              {describeAgreement(pickedResult.percent, results.totalVotes)}
+              {describeAgreement(results.category, pickedResult.percent, results.totalVotes)}
             </p>
             <p className="text-sm text-muted">
               {results.totalVotes} {results.totalVotes === 1 ? "vote" : "votes"} so far
