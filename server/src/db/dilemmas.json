@@ -1,102 +1,277 @@
 [
   {
-    "text": "A trolley is heading toward five people. Pull the lever and it hits one person instead.",
-    "options": ["Pull the lever", "Do nothing"]
+    "text": "A trolley is heading toward five people. Pull the lever and it switches to a track with one person.",
+    "doNothing": {
+      "trackLabel": "5 people",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "1 person",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "A trolley is heading toward your phone. Pull the lever and it hits your laptop instead.",
-    "options": ["Pull the lever", "Do nothing"]
+    "text": "Five people are tied to the track. The man who tied them there stands on the side track. Pull the lever and it hits him instead.",
+    "doNothing": {
+      "trackLabel": "5 people",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "The man who tied them",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "Pull the lever to turn every meeting into an email. The trolley then hits the office coffee machine.",
-    "options": ["Pull the lever", "Do nothing"]
+    "text": "A trolley is heading toward two children. Pull the lever and it hits three adults instead.",
+    "doNothing": {
+      "trackLabel": "2 children",
+      "peopleOnTrack": 2
+    },
+    "pullTheLever": {
+      "trackLabel": "3 adults",
+      "peopleOnTrack": 3
+    }
   },
   {
-    "text": "Pull the lever to remove every mosquito from Earth. Scientists are not sure what happens next.",
-    "options": ["Pull the lever", "Do nothing"]
+    "text": "Five people climbed onto the track for a selfie. A trolley is coming. Pull the lever and it hits one railway worker instead.",
+    "doNothing": {
+      "trackLabel": "5 selfie-takers",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "1 railway worker",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "Pull the lever to make everyone 10% happier. The sky turns green forever.",
-    "options": ["Pull the lever", "Do nothing"]
+    "text": "Pull the lever and the trolley goes onto a loop. One person on the loop stops it before it comes back around to the five.",
+    "doNothing": {
+      "trackLabel": "5 people",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "1 person on the loop",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "A trolley is heading toward the last copy of every printed book. Pull the lever and it hits the internet's data centers instead.",
-    "options": ["Save the books", "Save the internet"]
+    "text": "A trolley is heading toward five strangers. Pull the lever and it hits your worst enemy instead.",
+    "doNothing": {
+      "trackLabel": "5 strangers",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "Your worst enemy",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "Would you rather fight one horse-sized duck or a hundred duck-sized horses?",
-    "options": ["One horse-sized duck", "100 duck-sized horses"]
+    "text": "Pull a lever to open a trapdoor. A man falls onto the track and stops the trolley before it hits five people.",
+    "doNothing": {
+      "trackLabel": "5 people",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "1 man",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "Would you rather always be 10 minutes late or always be 20 minutes early?",
-    "options": ["10 minutes late", "20 minutes early"]
+    "text": "A trolley is heading toward five strangers. Pull the lever and it hits your own child instead.",
+    "doNothing": {
+      "trackLabel": "5 strangers",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "Your child",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "Does pineapple belong on pizza?",
-    "options": ["Yes, obviously", "Absolutely not"]
+    "text": "A trolley is heading toward a pregnant woman. Pull the lever and it hits two people instead.",
+    "doNothing": {
+      "trackLabel": "A pregnant woman",
+      "peopleOnTrack": 1
+    },
+    "pullTheLever": {
+      "trackLabel": "2 people",
+      "peopleOnTrack": 2
+    }
   },
   {
-    "text": "Is a hot dog a sandwich?",
-    "options": ["It's a sandwich", "It's not a sandwich"]
+    "text": "You drive the trolley and the brakes fail. Pull the lever to steer onto a side track with one worker instead of five.",
+    "doNothing": {
+      "trackLabel": "5 workers",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "1 worker",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "Toilet paper: over or under?",
-    "options": ["Over", "Under"]
+    "text": "A trolley is heading toward the world's best surgeon. Pull the lever and it hits two strangers instead.",
+    "doNothing": {
+      "trackLabel": "The world's best surgeon",
+      "peopleOnTrack": 1
+    },
+    "pullTheLever": {
+      "trackLabel": "2 strangers",
+      "peopleOnTrack": 2
+    }
   },
   {
-    "text": "Would you rather know the date of your death or the cause of it?",
-    "options": ["The date", "The cause"]
+    "text": "A trolley is heading toward five 90-year-olds. Pull the lever and it hits one 10-year-old instead.",
+    "doNothing": {
+      "trackLabel": "5 people aged 90",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "1 child aged 10",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "Would you rather be able to read minds or be invisible?",
-    "options": ["Read minds", "Be invisible"]
+    "text": "A trolley is heading toward one innocent person. Pull the lever and it hits five convicted murderers instead.",
+    "doNothing": {
+      "trackLabel": "1 innocent person",
+      "peopleOnTrack": 1
+    },
+    "pullTheLever": {
+      "trackLabel": "5 murderers",
+      "peopleOnTrack": 5
+    }
   },
   {
-    "text": "Would you rather talk to animals or speak every human language?",
-    "options": ["Talk to animals", "Speak every language"]
+    "text": "A trolley is heading toward ten people. Pull the lever and it hits nine people instead.",
+    "doNothing": {
+      "trackLabel": "10 people",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "9 people",
+      "peopleOnTrack": 5
+    }
   },
   {
-    "text": "Would you rather have a rewind button or a pause button for your life?",
-    "options": ["Rewind", "Pause"]
+    "text": "A trolley is heading toward your best friend. Pull the lever and it hits five strangers instead.",
+    "doNothing": {
+      "trackLabel": "Your best friend",
+      "peopleOnTrack": 1
+    },
+    "pullTheLever": {
+      "trackLabel": "5 strangers",
+      "peopleOnTrack": 5
+    }
   },
   {
-    "text": "You find a wallet with 5,000 kr in it and no ID card.",
-    "options": ["Hand it in", "Keep it"]
+    "text": "A trolley is heading toward five people. Pull the lever and it hits one person. Nobody will ever know it was you.",
+    "doNothing": {
+      "trackLabel": "5 people",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "1 person",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "Would you rather never sit in traffic again or never catch a cold again?",
-    "options": ["No more traffic", "No more colds"]
+    "text": "Pull the lever to save five people and kill one. Afterwards, you go on trial for the death of the one.",
+    "doNothing": {
+      "trackLabel": "5 people",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "1 person, and you on trial",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "Would you rather live without music or without movies?",
-    "options": ["No music", "No movies"]
+    "text": "A trolley is heading toward five convicted bank robbers. Pull the lever and it hits one doctor instead.",
+    "doNothing": {
+      "trackLabel": "5 bank robbers",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "1 doctor",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "Would you rather have a personal chef or a personal driver?",
-    "options": ["Personal chef", "Personal driver"]
+    "text": "A trolley is heading toward five people. Pull the lever and it hits one scientist who is close to a cure for cancer.",
+    "doNothing": {
+      "trackLabel": "5 people",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "1 cancer scientist",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "Would you rather work four days a week for 80% pay or five days for full pay?",
-    "options": ["Four days, 80% pay", "Five days, full pay"]
+    "text": "A trolley is heading toward five people. Pull the lever and it hits one person who has only weeks to live.",
+    "doNothing": {
+      "trackLabel": "5 people",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "1 person with weeks to live",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "Would you rather have your dream job with a terrible boss or a boring job with a great boss?",
-    "options": ["Dream job, bad boss", "Boring job, great boss"]
+    "text": "A trolley is heading toward five people. The one person on the side track volunteered to take their place.",
+    "doNothing": {
+      "trackLabel": "5 people",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "1 volunteer",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "Would you rather work from home forever or from the office forever?",
-    "options": ["Home forever", "Office forever"]
+    "text": "A trolley is heading toward five people. Pull the lever to switch it onto the track where you are tied.",
+    "doNothing": {
+      "trackLabel": "5 people",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "You",
+      "peopleOnTrack": 1
+    }
   },
   {
-    "text": "A coworker takes credit for your work in a meeting.",
-    "options": ["Call it out right away", "Talk to them after"]
+    "text": "You pulled the lever by mistake. The trolley now heads toward one person instead of five. Pull it again to switch it back.",
+    "doNothing": {
+      "trackLabel": "1 person",
+      "peopleOnTrack": 1
+    },
+    "pullTheLever": {
+      "trackLabel": "5 people",
+      "peopleOnTrack": 5
+    }
   },
   {
-    "text": "Would you rather be the best-paid person on a team you hate or the lowest-paid on a team you love?",
-    "options": ["Best paid, bad team", "Lowest paid, great team"]
+    "text": "A trolley is heading toward you. Pull the lever and it hits five strangers instead.",
+    "doNothing": {
+      "trackLabel": "You",
+      "peopleOnTrack": 1
+    },
+    "pullTheLever": {
+      "trackLabel": "5 strangers",
+      "peopleOnTrack": 5
+    }
   },
   {
-    "text": "Would you rather give one talk to 500 strangers or ten talks to 5 coworkers?",
-    "options": ["500 strangers", "5 coworkers, ten times"]
+    "text": "A trolley is heading toward 100 people. Pull the lever and it hits your mother instead.",
+    "doNothing": {
+      "trackLabel": "100 people",
+      "peopleOnTrack": 5
+    },
+    "pullTheLever": {
+      "trackLabel": "Your mother",
+      "peopleOnTrack": 1
+    }
   }
 ]

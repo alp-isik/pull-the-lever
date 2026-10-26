@@ -3,7 +3,7 @@ import Layout from "./components/Layout.jsx";
 import AdminPage from "./pages/AdminPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import PlayPage from "./pages/PlayPage.jsx";
-import SubmitPage from "./pages/SubmitPage.jsx";
+import SuggestPage from "./pages/SuggestPage.jsx";
 
 function NotFoundPage() {
   return (
@@ -23,7 +23,7 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/play" element={<PlayPage />} />
-          <Route path="/submit" element={<SubmitPage />} />
+          <Route path="/suggest" element={<SuggestPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>

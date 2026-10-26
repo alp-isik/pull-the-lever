@@ -11,7 +11,7 @@ if (existingCount > 0) {
   console.log(`The database already has ${existingCount} dilemmas. Nothing was added.`);
 } else {
   for (const dilemma of starterDilemmas) {
-    await createDilemma(dilemma.text, dilemma.options, "approved");
+    await createDilemma(dilemma.text, dilemma.doNothing, dilemma.pullTheLever);
   }
   console.log(`Added ${starterDilemmas.length} dilemmas.`);
 }

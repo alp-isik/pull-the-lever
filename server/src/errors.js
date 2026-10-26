@@ -7,6 +7,7 @@ export function httpError(status, message) {
 
 // Send client errors (4xx) as they are. Hide the details of server errors (5xx).
 // Express knows an error handler by its 4 parameters, so keep "next" although it is not used.
+// eslint-disable-next-line no-unused-vars
 export function handleErrors(error, req, res, next) {
   const status = error.status || 500;
   if (status < 500) {

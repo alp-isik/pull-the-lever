@@ -13,9 +13,9 @@ export const adminLoginLimit = rateLimit({
   message: { error: "Too many failed logins. Wait 15 minutes and try again." },
 });
 
-// Stop one person from filling the review list with spam.
-export const submissionLimit = rateLimit({
+// Stop one person from filling the suggestion list with spam.
+export const suggestionLimit = rateLimit({
   windowMs: ONE_HOUR,
   limit: 10,
-  message: { error: "You sent a lot of dilemmas. Wait an hour and try again." },
+  message: { error: "You sent a lot of ideas. Wait an hour and try again." },
 });

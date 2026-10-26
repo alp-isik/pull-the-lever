@@ -1,5 +1,10 @@
+// The client has a copy of these limits in client/src/limits.js. Change both together.
 export const MAX_DILEMMA_LENGTH = 200;
-export const MAX_OPTION_LENGTH = 60;
+// What stands on a track, for example "5 people". The game draws 1 to 5 people on each track.
+export const MAX_TRACK_LABEL_LENGTH = 30;
+export const MIN_PEOPLE_ON_TRACK = 1;
+export const MAX_PEOPLE_ON_TRACK = 5;
+export const MAX_SUGGESTION_LENGTH = 300;
 
 // Turn a route parameter or body value into a positive whole number, or null.
 export function parseId(value) {
@@ -22,15 +27,33 @@ export function isValidText(value, maxLength) {
   return true;
 }
 
-// A dilemma needs its text and exactly two options.
-export function isValidDilemma(text, options) {
+function isValidPeopleCount(value) {
+  if (Number.isInteger(value) && value >= MIN_PEOPLE_ON_TRACK && value <= MAX_PEOPLE_ON_TRACK) {
+    return true;
+  }
+  return false;
+}
+
+// A track needs a label and the number of people to draw on it.
+function isValidTrack(track) {
+  if (typeof track !== "object" || track === null) {
+    return false;
+  }
+  if (!isValidText(track.trackLabel, MAX_TRACK_LABEL_LENGTH)) {
+    return false;
+  }
+  if (!isValidPeopleCount(track.peopleOnTrack)) {
+    return false;
+  }
+  return true;
+}
+
+// A dilemma needs its text and what stands on each of the two tracks.
+export function isValidDilemma(text, doNothing, pullTheLever) {
   if (!isValidText(text, MAX_DILEMMA_LENGTH)) {
     return false;
   }
-  if (!Array.isArray(options) || options.length !== 2) {
-    return false;
-  }
-  if (!options.every((option) => isValidText(option, MAX_OPTION_LENGTH))) {
+  if (!isValidTrack(doNothing) || !isValidTrack(pullTheLever)) {
     return false;
   }
   return true;

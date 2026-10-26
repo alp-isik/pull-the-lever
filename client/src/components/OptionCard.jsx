@@ -13,13 +13,27 @@ function getCardClass(isPicked, isLocked) {
   return `${baseClass} cursor-pointer border-ink bg-card hover:-translate-y-1 hover:shadow-[4px_4px_0_var(--color-ink)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`;
 }
 
-export default function OptionCard({ label, option, isPicked, isLocked, result, onPick }) {
+// onPointAt(optionId) runs when the mouse or the keyboard focus enters the card, and
+// onPointAt(null) when it leaves. The Play page uses it to show who is on this option's track.
+export default function OptionCard({
+  label,
+  option,
+  isPicked,
+  isLocked,
+  result,
+  onPick,
+  onPointAt,
+}) {
   return (
     <button
       type="button"
       className={getCardClass(isPicked, isLocked)}
       disabled={isLocked}
       onClick={() => onPick(option.id)}
+      onMouseEnter={() => onPointAt(option.id)}
+      onMouseLeave={() => onPointAt(null)}
+      onFocus={() => onPointAt(option.id)}
+      onBlur={() => onPointAt(null)}
     >
       <span className="flex flex-wrap items-center justify-between gap-1 text-xs font-bold tracking-widest text-muted uppercase">
         {label}
@@ -31,6 +45,8 @@ export default function OptionCard({ label, option, isPicked, isLocked, result, 
       </span>
 
       <span className="text-base leading-snug font-semibold sm:text-xl">{option.text}</span>
+      {/* The track drawing is hidden from screen readers, so they read what is at stake here. */}
+      {option.trackLabel && <span className="sr-only">On this track: {option.trackLabel}.</span>}
 
       {result && (
         <span className="flex flex-col gap-2">

@@ -41,8 +41,8 @@ export function getPlayerSummary() {
   return request("/players/me/summary");
 }
 
-export function submitDilemma(text, options) {
-  return sendJson("POST", "/submissions", { text, options });
+export function sendSuggestion(text) {
+  return sendJson("POST", "/suggestions", { text });
 }
 
 // Admin
@@ -59,10 +59,19 @@ export function logoutAdmin() {
   return sendJson("POST", "/admin/logout", {});
 }
 
-export function getSubmissions() {
-  return request("/admin/submissions");
+// doNothing and pullTheLever: what stands on each track, as { trackLabel, peopleOnTrack }.
+export function addDilemma(text, doNothing, pullTheLever) {
+  return sendJson("POST", "/admin/dilemmas", { text, doNothing, pullTheLever });
 }
 
-export function reviewSubmission(dilemmaId, status) {
-  return sendJson("PATCH", `/admin/submissions/${dilemmaId}`, { status });
+export function deleteDilemma(dilemmaId) {
+  return request(`/admin/dilemmas/${dilemmaId}`, { method: "DELETE" });
+}
+
+export function getSuggestions() {
+  return request("/admin/suggestions");
+}
+
+export function deleteSuggestion(suggestionId) {
+  return request(`/admin/suggestions/${suggestionId}`, { method: "DELETE" });
 }

@@ -61,12 +61,9 @@ async function getDilemmaResults(dilemmaId) {
 }
 
 // Save the player's vote and return how everyone voted on this dilemma.
-// Return null if the option does not belong to this dilemma, or the dilemma is not approved.
+// Return null if the option does not belong to this dilemma.
 export async function castVote(playerId, dilemmaId, optionId) {
-  const option = await Option.findOne({
-    where: { id: optionId, dilemmaId },
-    include: { model: Dilemma, where: { status: "approved" } },
-  });
+  const option = await Option.findOne({ where: { id: optionId, dilemmaId } });
   if (!option) {
     return null;
   }
@@ -87,13 +84,10 @@ export async function castVote(playerId, dilemmaId, optionId) {
 }
 
 export async function getPlayerSummary(playerId) {
-  const totalDilemmas = await Dilemma.count({ where: { status: "approved" } });
+  const totalDilemmas = await Dilemma.count();
   const playerVotes = await Vote.findAll({
     where: { playerId },
-    include: [
-      { model: Dilemma, where: { status: "approved" }, include: Option },
-      { model: Option },
-    ],
+    include: [{ model: Dilemma, include: Option }, { model: Option }],
     order: [["dilemmaId", "ASC"]],
   });
 

@@ -7,19 +7,32 @@ import TrackFork from "../components/TrackFork.jsx";
 import { primaryButton } from "../components/styles.js";
 
 // The first option takes the top branch, the second takes the bottom branch.
+// The top branch goes straight on: it is where the trolley goes if nobody acts.
 const SIDES = ["top", "bottom"];
 
-// Start at the first dilemma the player has not answered, so a page reload does not restart the game.
-function findFirstUnansweredIndex(dilemmas) {
-  const index = dilemmas.findIndex((dilemma) => dilemma.pickedOptionId === null);
-  if (index === -1) {
-    return dilemmas.length;
-  }
-  return index;
+// What stands on each track, in the shape TrackFork uses.
+function getStakes(options) {
+  return {
+    top: { label: options[0].trackLabel, people: options[0].peopleOnTrack },
+    bottom: { label: options[1].trackLabel, people: options[1].peopleOnTrack },
+  };
 }
 
-function getPickedSide(options, pickedOptionId) {
-  const index = options.findIndex((option) => option.id === pickedOptionId);
+// Find the first dilemma at or after startIndex that the player has not answered.
+// Then a page reload does not restart the game, and the player never sees a dilemma twice.
+// Return dilemmas.length when every dilemma from startIndex on is answered.
+function findUnansweredIndex(dilemmas, startIndex) {
+  for (let index = startIndex; index < dilemmas.length; index += 1) {
+    if (dilemmas[index].pickedOptionId === null) {
+      return index;
+    }
+  }
+  return dilemmas.length;
+}
+
+// The track of an option: "top", "bottom", or null when no option is given.
+function getSide(options, optionId) {
+  const index = options.findIndex((option) => option.id === optionId);
   if (index === -1) {
     return null;
   }
@@ -47,6 +60,8 @@ export default function PlayPage() {
   const [dilemmas, setDilemmas] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [pickedOptionId, setPickedOptionId] = useState(null);
+  // The option under the mouse or the keyboard focus, before the vote.
+  const [pointedOptionId, setPointedOptionId] = useState(null);
   const [results, setResults] = useState(null);
   const [loadError, setLoadError] = useState(null);
   const [voteError, setVoteError] = useState(null);
@@ -55,7 +70,7 @@ export default function PlayPage() {
     getDilemmas()
       .then((list) => {
         setDilemmas(list);
-        setCurrentIndex(findFirstUnansweredIndex(list));
+        setCurrentIndex(findUnansweredIndex(list, 0));
       })
       .catch((error) => setLoadError(error.message));
   }, []);
@@ -74,7 +89,8 @@ export default function PlayPage() {
   }
 
   const dilemma = dilemmas[currentIndex];
-  const isLastDilemma = currentIndex === dilemmas.length - 1;
+  const nextIndex = findUnansweredIndex(dilemmas, currentIndex + 1);
+  const isLastDilemma = nextIndex === dilemmas.length;
 
   async function pickOption(optionId) {
     // Start the trolley at once. The results come in while it drives.
@@ -92,8 +108,9 @@ export default function PlayPage() {
 
   function goToNextDilemma() {
     setPickedOptionId(null);
+    setPointedOptionId(null);
     setResults(null);
-    setCurrentIndex(currentIndex + 1);
+    setCurrentIndex(nextIndex);
   }
 
   function findOptionResult(optionId) {
@@ -104,6 +121,8 @@ export default function PlayPage() {
   }
 
   const pickedResult = findOptionResult(pickedOptionId);
+  // Before the vote, the people on the track of the pointed option grow a little.
+  const atRiskSide = pickedOptionId === null ? getSide(dilemma.options, pointedOptionId) : null;
 
   return (
     // The track takes the height that is left over, so the whole game fits on one screen.
@@ -117,7 +136,12 @@ export default function PlayPage() {
       <div className="relative min-h-28 flex-1">
         <div className="absolute inset-0">
           {/* key: a new dilemma gets a new track, so the trolley starts at the left again. */}
-          <TrackFork key={dilemma.id} pickedSide={getPickedSide(dilemma.options, pickedOptionId)} />
+          <TrackFork
+            key={dilemma.id}
+            pickedSide={getSide(dilemma.options, pickedOptionId)}
+            stakes={getStakes(dilemma.options)}
+            atRiskSide={atRiskSide}
+          />
         </div>
       </div>
 
@@ -136,6 +160,7 @@ export default function PlayPage() {
             isLocked={pickedOptionId !== null}
             result={findOptionResult(option.id)}
             onPick={pickOption}
+            onPointAt={setPointedOptionId}
           />
         ))}
       </div>

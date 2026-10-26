@@ -1,15 +1,15 @@
 import { Router } from "express";
 import { httpError } from "../errors.js";
 import { parseId } from "../validation.js";
-import { findDilemmasByStatus, findPicksByPlayer, toDilemmaJson } from "../services/dilemmas.js";
+import { findAllDilemmas, findPicksByPlayer, toDilemmaJson } from "../services/dilemmas.js";
 import { castVote } from "../services/results.js";
 
 const router = Router();
 
 // GET /api/dilemmas
-// Every approved dilemma in play order, with the option this player picked (or null).
+// Every dilemma in play order, with the option this player picked (or null).
 router.get("/", async (req, res) => {
-  const dilemmas = await findDilemmasByStatus("approved");
+  const dilemmas = await findAllDilemmas();
   const picksByDilemma = await findPicksByPlayer(req.playerId);
 
   res.json(

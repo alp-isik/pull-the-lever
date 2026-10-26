@@ -55,7 +55,7 @@ export default function SummaryScreen() {
       <header className="flex flex-col gap-3">
         <p className="text-sm font-bold tracking-widest text-accent uppercase">End of the line</p>
         <h1 className="text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">
-          You made {summary.answered} decisions.
+          You made {summary.answered} {summary.answered === 1 ? "decision" : "decisions"}.
         </h1>
         <p className="max-w-xl text-lg text-muted">
           Here is how your picks compare with everyone else's.
@@ -114,13 +114,13 @@ export default function SummaryScreen() {
         </ul>
       </details>
 
-      {/* Same buttons as on the front page: the main action on the left, Submit on the right. */}
+      {/* Same buttons as on the front page: the main action on the left, Suggest on the right. */}
       <div className="flex flex-wrap justify-center gap-3">
         <Link to="/" className={largePrimaryButton}>
           Back to the start
         </Link>
-        <Link to="/submit" className={largeSecondaryButton}>
-          Submit a dilemma
+        <Link to="/suggest" className={largeSecondaryButton}>
+          Suggest a dilemma
         </Link>
       </div>
     </section>

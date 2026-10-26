@@ -3,7 +3,7 @@ import TrackFork from "../components/TrackFork.jsx";
 import { largePrimaryButton, largeSecondaryButton } from "../components/styles.js";
 
 const steps = [
-  { title: "Pick a track", text: "Every dilemma has two options. No right answers." },
+  { title: "Pick a track", text: "Do nothing, or pull the lever. No right answers." },
   { title: "See the split", text: "Find out how many people chose the same as you." },
   {
     title: "Get your verdict",
@@ -11,12 +11,18 @@ const steps = [
   },
 ];
 
+// The classic trolley problem: five people straight ahead, one on the side track.
+const classicStakes = {
+  top: { label: "", people: 5 },
+  bottom: { label: "", people: 1 },
+};
+
 export default function HomePage() {
   return (
     <section className="flex flex-1 flex-col items-center gap-6 pt-4 text-center sm:pt-8">
       <div className="flex flex-col items-center gap-4">
         <p className="text-sm font-bold tracking-widest text-accent uppercase">
-          A game of small and silly dilemmas
+          A game of trolley problems
         </p>
         <h1 className="max-w-2xl text-4xl font-extrabold tracking-tight text-balance sm:text-6xl">
           Would you pull the lever?
@@ -26,7 +32,7 @@ export default function HomePage() {
       {/* Same as on the Play page: the track takes the height that is left over. */}
       <div className="relative min-h-24 w-full flex-1">
         <div className="absolute inset-0">
-          <TrackFork />
+          <TrackFork stakes={classicStakes} />
         </div>
       </div>
 
@@ -34,8 +40,8 @@ export default function HomePage() {
         <Link to="/play" className={largePrimaryButton}>
           Play
         </Link>
-        <Link to="/submit" className={largeSecondaryButton}>
-          Submit a dilemma
+        <Link to="/suggest" className={largeSecondaryButton}>
+          Suggest a dilemma
         </Link>
       </div>
 

@@ -8,7 +8,7 @@ import { handleErrors, httpError } from "./errors.js";
 import { identifyPlayer } from "./middleware/player.js";
 import dilemmasRouter from "./routes/dilemmas.js";
 import playersRouter from "./routes/players.js";
-import submissionsRouter from "./routes/submissions.js";
+import suggestionsRouter from "./routes/suggestions.js";
 import adminRouter from "./routes/admin.js";
 
 const clientBuildFolder = path.resolve(import.meta.dirname, "..", "..", "client", "dist");
@@ -38,7 +38,7 @@ app.use(cookieParser());
 app.use("/api", identifyPlayer);
 app.use("/api/dilemmas", dilemmasRouter);
 app.use("/api/players", playersRouter);
-app.use("/api/submissions", submissionsRouter);
+app.use("/api/suggestions", suggestionsRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api", () => {
   throw httpError(404, "This API endpoint does not exist.");

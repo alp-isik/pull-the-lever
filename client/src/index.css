@@ -10,6 +10,17 @@
   --color-line: #d9d3c7;
   --color-accent: #d7263d;
   --color-accent-soft: #fbdde1;
+  /* The wooden sleepers under the rails in TrackFork.jsx. */
+  --color-wood: #c9a97f;
+  /* The people on the tracks in TrackFork.jsx. Dark mode does not change these,
+     so the people look the same in both modes. */
+  --color-figure-fill: #fffdf9;
+  --color-figure-line: #1c1a17;
+  --color-rope: #a87b3f;
+  /* The cartoon blood splash: the blood, its outline and the shine spot. */
+  --color-blood: #b8140e;
+  --color-blood-dark: #4a0604;
+  --color-blood-shine: rgb(255 255 255 / 0.4);
   /* Text on the accent color. White stays readable on the red in both modes. */
   --color-on-accent: #ffffff;
 }
@@ -30,6 +41,7 @@
   --color-line: #3d3832;
   --color-accent: #d7263d;
   --color-accent-soft: #3d1a1f;
+  --color-wood: #5c4734;
 }
 
 /* The logo tile in favicon.svg is near-black. In dark mode a light ring keeps its edge visible. */
@@ -43,7 +55,7 @@ body {
   color: var(--color-ink);
 }
 
-/* The waiting trolley in TrackFork.jsx rocks a little forward and back.
+/* The waiting train in TrackFork.jsx rocks a little forward and back.
    Its drive along the track is an SVG <animateMotion>, not CSS. */
 .trolley-wait {
   animation: trolley-wait 1.6s ease-in-out infinite;
@@ -55,10 +67,71 @@ body {
   }
 }
 
+/* A person the trolley ran over fades under the splash.
+   TrackFork.jsx sets the delay for each person: the moment the trolley reaches them. */
+.person-hit {
+  opacity: 0.3;
+  transition: opacity 0.15s ease-out;
+}
+
+/* The head with X eyes shows up on top of the splash at the same moment.
+   TrackFork.jsx sets the delay. "backwards" hides the head until then. */
+.dead-head {
+  animation: dead-head 0.1s ease-out backwards;
+}
+
+@keyframes dead-head {
+  from {
+    opacity: 0;
+  }
+}
+
+/* The blood splash pops in a little too big, then settles.
+   TrackFork.jsx sets the delay. "backwards" hides the splash until then. */
+.splash {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: splash 0.35s cubic-bezier(0.2, 1.6, 0.4, 1) backwards;
+}
+
+@keyframes splash {
+  from {
+    scale: 0;
+    opacity: 0;
+  }
+}
+
+/* Each drop flies out from near the middle of the splash to its place.
+   TrackFork.jsx sets --from-x and --from-y for each drop. */
+.splash-drop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: splash-drop 0.45s ease-out backwards;
+}
+
+@keyframes splash-drop {
+  from {
+    translate: var(--from-x) var(--from-y);
+    scale: 0.3;
+  }
+}
+
+/* Each person grows a little when the player points at the option that would kill them.
+   transform-box and transform-origin make each person grow from its own center. */
+.person {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: scale 0.2s ease-out;
+}
+
+.people-at-risk .person {
+  scale: 1.2;
+}
+
 /* Result bars grow from 0 to the width set in their style attribute.
-   They wait 0.6s, so the trolley reaches its branch first. */
+   They wait 1.2s, so the trolley hits the first person before the results show. */
 .bar-grow {
-  animation: bar-grow 0.7s ease-out 0.6s backwards;
+  animation: bar-grow 0.7s ease-out 1.2s backwards;
 }
 
 @keyframes bar-grow {
@@ -69,7 +142,7 @@ body {
 
 /* Short fade-in for things that appear after a vote. */
 .fade-up {
-  animation: fade-up 0.4s ease-out 0.6s backwards;
+  animation: fade-up 0.4s ease-out 1.2s backwards;
 }
 
 @keyframes fade-up {
@@ -88,5 +161,16 @@ body {
   .fade-up {
     animation-duration: 1ms;
     animation-delay: 0s;
+  }
+
+  .person-hit,
+  .person {
+    transition: none;
+  }
+
+  .splash,
+  .splash-drop,
+  .dead-head {
+    animation: none;
   }
 }

@@ -7,7 +7,7 @@ export default function Layout() {
     // Then the Play page can share out the screen height and fit without scrolling.
     <div className="flex h-dvh flex-col">
       {/* The logo on the left, the light and dark mode switch on the right.
-          The front page has the Play and Submit buttons. */}
+          The front page has the Play and Suggest buttons. */}
       <header className="mx-auto flex w-full max-w-4xl shrink-0 items-center justify-between gap-4 px-4 py-3 sm:py-4">
         <Link
           to="/"
