@@ -109,16 +109,25 @@ const SWITCH_LAYERS = [
   { color: "var(--color-wood)", width: 9, dashes: SLEEPER_DASHES.strokeDasharray },
 ];
 // The operator and the lever stand below the main track, low enough that the waiting train does
-// not cover them. Lever angles are in degrees from straight up: it leans away from the operator
-// before the pull, and toward them after it.
+// not cover them. The operator is seen from the side, facing the lever.
+// Lever angles are in degrees from straight up: it leans away from the operator before the pull,
+// and toward them after it. Pulled, the knob still leaves a small gap in front of their chest.
 const OPERATOR_HEAD = { x: 121, y: 86 };
-const OPERATOR_SHOULDER = { x: OPERATOR_HEAD.x + 7, y: OPERATOR_HEAD.y + 11 };
-const LEVER_PIVOT = { x: 145, y: 122 };
-const LEVER_START_ANGLE = 25;
-const LEVER_PULLED_ANGLE = -25;
+const OPERATOR_SHOULDER = { x: OPERATOR_HEAD.x, y: OPERATOR_HEAD.y + 11 };
+// Before the pull, the operator leans forward to reach the lever: they are turned around their
+// feet by this many degrees, toward the lever. They stand up straight as they pull.
+const OPERATOR_FEET = { x: OPERATOR_HEAD.x, y: OPERATOR_HEAD.y + 39 };
+const OPERATOR_START_LEAN = 7;
+const LEVER_PIVOT = { x: 136, y: 119 };
+const LEVER_START_ANGLE = 24;
+const LEVER_PULLED_ANGLE = -6;
 // The operator holds the lever this far up from its pivot. The knob is at the top end.
-const LEVER_HAND_HEIGHT = 18;
-const LEVER_LENGTH = 24;
+const LEVER_HAND_HEIGHT = 17;
+const LEVER_LENGTH = 23;
+// The arm on the lever bends at the elbow, so it keeps its length while the lever moves.
+// Together the two parts are just long enough to reach the lever before the pull.
+const UPPER_ARM_LENGTH = 10;
+const FOREARM_LENGTH = 10;
 // When the player pulls the lever, the train waits this long, until the switch has moved.
 const SWITCH_SECONDS = 0.35;
 
@@ -606,35 +615,101 @@ function getLeverPoint(distance, angleDegrees) {
   };
 }
 
-// Where the operator's hand is during the pull, at a few steps from start to end, as the
-// "values" list of an <animate>. The arm's end follows these points, so it stays on the lever.
-function getHandPathValues(coordinate) {
+// How far the pull has gone (0 to 1) at a few steps from start to end.
+function getPullShares() {
   const steps = 6;
-  const values = [];
+  const shares = [];
   for (let step = 0; step <= steps; step += 1) {
-    const angle = LEVER_START_ANGLE + ((LEVER_PULLED_ANGLE - LEVER_START_ANGLE) * step) / steps;
-    values.push(getLeverPoint(LEVER_HAND_HEIGHT, angle)[coordinate].toFixed(1));
+    shares.push(step / steps);
   }
-  return values.join(";");
+  return shares;
+}
+
+// Where the operator's hand is when the pull has gone share (0 to 1) of the way.
+function getHandPoint(share) {
+  const angle = LEVER_START_ANGLE + (LEVER_PULLED_ANGLE - LEVER_START_ANGLE) * share;
+  return getLeverPoint(LEVER_HAND_HEIGHT, angle);
+}
+
+// point turned around center by angleDegrees, the same way as SVG's rotate(): a positive angle
+// turns clockwise on the screen.
+function rotatePoint(point, center, angleDegrees) {
+  const angle = (angleDegrees * Math.PI) / 180;
+  const fromCenter = { x: point.x - center.x, y: point.y - center.y };
+  return {
+    x: center.x + fromCenter.x * Math.cos(angle) - fromCenter.y * Math.sin(angle),
+    y: center.y + fromCenter.x * Math.sin(angle) + fromCenter.y * Math.cos(angle),
+  };
+}
+
+// How far the operator leans forward when the pull has gone share (0 to 1) of the way.
+function getLean(share) {
+  return OPERATOR_START_LEAN * (1 - share);
+}
+
+// Where the operator's shoulder is when the pull has gone share (0 to 1) of the way.
+// It moves with the lean.
+function getShoulderPoint(share) {
+  return rotatePoint(OPERATOR_SHOULDER, OPERATOR_FEET, getLean(share));
+}
+
+// The elbow, for the shoulder and the hand. The elbow is where a circle around the shoulder (as
+// wide as the upper arm) meets a circle around the hand (as wide as the forearm). Of the two
+// points where they meet, this takes the one behind the line from the shoulder to the hand, so
+// the elbow points back, as in a real pull.
+function getElbowPoint(shoulder, hand) {
+  const toHand = { x: hand.x - shoulder.x, y: hand.y - shoulder.y };
+  const handDistance = Math.hypot(toHand.x, toHand.y);
+  const direction = { x: toHand.x / handDistance, y: toHand.y / handDistance };
+  // How far the elbow is along the line from the shoulder to the hand, and how far out from it.
+  const along =
+    (UPPER_ARM_LENGTH ** 2 - FOREARM_LENGTH ** 2 + handDistance ** 2) / (2 * handDistance);
+  const out = Math.sqrt(UPPER_ARM_LENGTH ** 2 - along ** 2);
+  // (-direction.y, direction.x) is the direction turned a quarter turn, back from the line.
+  return {
+    x: shoulder.x + direction.x * along - direction.y * out,
+    y: shoulder.y + direction.y * along + direction.x * out,
+  };
+}
+
+// The arm as the "points" of a <polyline>: shoulder, elbow, hand, when the pull has gone share
+// (0 to 1) of the way.
+function getArmPoints(share) {
+  const shoulder = getShoulderPoint(share);
+  const hand = getHandPoint(share);
+  return [shoulder, getElbowPoint(shoulder, hand), hand]
+    .map((point) => `${point.x.toFixed(1)},${point.y.toFixed(1)}`)
+    .join(" ");
+}
+
+// The "values" list of an <animate> for the hand during the pull, so it stays on the lever.
+function getHandPathValues(coordinate) {
+  return getPullShares()
+    .map((share) => getHandPoint(share)[coordinate].toFixed(1))
+    .join(";");
+}
+
+// The "values" list of an <animate> for the arm's points during the pull.
+function getArmPathValues() {
+  return getPullShares().map(getArmPoints).join(";");
 }
 
 // A railway worker in a red cap, standing next to the lever, drawn where they stand.
+// They are seen from the side, facing right, toward the lever: one eye, a narrow body, and the
+// cap's brim in front. The other arm is hidden behind the body.
 // The arm that holds the lever is in SwitchAndLever, because it moves with the lever.
 // The operator is drawn around the center of their head, and OPERATOR_HEAD places them.
 function Operator({ stickerFilter }) {
   return (
     <g transform={`translate(${OPERATOR_HEAD.x} ${OPERATOR_HEAD.y})`} filter={stickerFilter}>
-      {/* Legs and the arm that hangs down */}
-      <line x1="-1" y1="26" x2="-3" y2="39" strokeWidth="4" {...LIMB} />
-      <line x1="5" y1="26" x2="7" y2="39" strokeWidth="4" {...LIMB} />
-      <line x1="-6.5" y1="11" x2="-9" y2="24" strokeWidth="3.5" {...LIMB} />
-      <circle cx="-9" cy="25.5" r="2.4" strokeWidth="1.8" {...SKIN} />
-      {/* Body and head. The eyes look a little to the right, at the lever. */}
-      <rect x="-7" y="8" width="14" height="19" rx="5" strokeWidth="2" {...SKIN} />
+      {/* Legs, one a little in front of the other */}
+      <line x1="-1" y1="26" x2="-4" y2="39" strokeWidth="4" {...LIMB} />
+      <line x1="1.5" y1="26" x2="4" y2="39" strokeWidth="4" {...LIMB} />
+      {/* Body and head, with one eye and the mouth on the side that faces the lever */}
+      <rect x="-5.5" y="8" width="11" height="19" rx="5" strokeWidth="2" {...SKIN} />
       <circle r="7" strokeWidth="2" {...SKIN} />
-      <circle cx="-1.8" cy="0.5" r="1.2" fill="var(--color-figure-line)" />
-      <circle cx="2.8" cy="0.5" r="1.2" fill="var(--color-figure-line)" />
-      <line x1="-1.5" y1="4" x2="1.5" y2="4" strokeWidth="1.3" {...LIMB} />
+      <circle cx="3.3" cy="0.5" r="1.2" fill="var(--color-figure-line)" />
+      <line x1="3" y1="4" x2="5" y2="4" strokeWidth="1.3" {...LIMB} />
       {/* Cap */}
       <path
         d="M-7 -2 A7 7 0 0 1 7 -2 Z"
@@ -643,14 +718,15 @@ function Operator({ stickerFilter }) {
         strokeWidth="2"
         strokeLinejoin="round"
       />
-      <line x1="5" y1="-2" x2="10" y2="-2" strokeWidth="2" {...LIMB} />
+      <line x1="5" y1="-2" x2="11" y2="-2" strokeWidth="2" {...LIMB} />
     </g>
   );
 }
 
 // The switch blade, the lever with its rod, and the operator's arm.
 // When isPulled turns true, every <animate> and <animateTransform> in here starts together:
-// the lever turns toward the operator, the arm follows it, and the switch blade turns down.
+// the lever turns toward the operator, the operator stands up straight, the arm follows the
+// lever, and the switch blade turns down.
 // "fill=freeze" keeps them in the pulled position afterwards.
 function SwitchAndLever({ isPulled, stickerFilter }) {
   const groupRef = useRef(null);
@@ -664,7 +740,7 @@ function SwitchAndLever({ isPulled, stickerFilter }) {
   }, [isPulled]);
 
   const timing = { dur: `${getSwitchSeconds()}s`, begin: "indefinite", fill: "freeze" };
-  const handStart = getLeverPoint(LEVER_HAND_HEIGHT, LEVER_START_ANGLE);
+  const handStart = getHandPoint(0);
 
   return (
     <g ref={groupRef}>
@@ -695,7 +771,17 @@ function SwitchAndLever({ isPulled, stickerFilter }) {
         strokeWidth="1.5"
       />
 
-      <Operator stickerFilter={stickerFilter} />
+      {/* The operator leans forward to reach the lever, and stands up straight as they pull */}
+      <g transform={`rotate(${getLean(0)} ${OPERATOR_FEET.x} ${OPERATOR_FEET.y})`}>
+        <animateTransform
+          attributeName="transform"
+          type="rotate"
+          from={`${getLean(0)} ${OPERATOR_FEET.x} ${OPERATOR_FEET.y}`}
+          to={`${getLean(1)} ${OPERATOR_FEET.x} ${OPERATOR_FEET.y}`}
+          {...timing}
+        />
+        <Operator stickerFilter={stickerFilter} />
+      </g>
 
       {/* Lever: a stick with a red knob, turning around its pivot */}
       <rect
@@ -735,17 +821,15 @@ function SwitchAndLever({ isPulled, stickerFilter }) {
 
       {/* The operator's arm and hand on the lever */}
       <g filter={stickerFilter}>
-        <line
-          x1={OPERATOR_SHOULDER.x}
-          y1={OPERATOR_SHOULDER.y}
-          x2={handStart.x}
-          y2={handStart.y}
+        <polyline
+          points={getArmPoints(0)}
+          fill="none"
           strokeWidth="3.5"
+          strokeLinejoin="round"
           {...LIMB}
         >
-          <animate attributeName="x2" values={getHandPathValues("x")} {...timing} />
-          <animate attributeName="y2" values={getHandPathValues("y")} {...timing} />
-        </line>
+          <animate attributeName="points" values={getArmPathValues()} {...timing} />
+        </polyline>
         <circle cx={handStart.x} cy={handStart.y} r="2.4" strokeWidth="1.8" {...SKIN}>
           <animate attributeName="cx" values={getHandPathValues("x")} {...timing} />
           <animate attributeName="cy" values={getHandPathValues("y")} {...timing} />
